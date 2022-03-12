@@ -1,0 +1,6 @@
+*.ptau
+*.zkey
+proof.json
+public.json
+verification_key.json
+*.wtns
