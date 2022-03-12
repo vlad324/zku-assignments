@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 contract Assigment1NFT is ERC721URIStorage {
     uint256 private _maxCount;
     uint256 private _tokenCounter = 0;
-    bytes32[] public _merkleTree;
+    bytes32[] private _merkleTree;
     uint256 _levels;
 
     constructor(uint256 maxCount) ERC721("Assigment 1 NFT", "ASG1") {
@@ -23,16 +23,16 @@ contract Assigment1NFT is ERC721URIStorage {
         bytes32 zero = keccak256(
             abi.encodePacked(address(0), uint256(0), address(0), bytes32(0x0))
         );
+
+        uint256 k = 0;
         for (uint256 i = 0; i < _merkleTree.length; i++) {
             if (i < maxCount) {
                 _merkleTree[i] = zero;
             } else {
                 _merkleTree[i] = keccak256(
-                    abi.encodePacked(
-                        _merkleTree[i - maxCount],
-                        _merkleTree[i - maxCount + 1]
-                    )
+                    abi.encodePacked(_merkleTree[k], _merkleTree[k + 1])
                 );
+                k += 2;
             }
         }
     }
@@ -83,5 +83,9 @@ contract Assigment1NFT is ERC721URIStorage {
             // calculate next index
             i = _maxCount + i / 2;
         }
+    }
+
+    function merkleTree() public view returns (bytes32[] memory) {
+        return _merkleTree;
     }
 }
