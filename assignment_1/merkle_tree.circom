@@ -17,18 +17,18 @@ template HashValues(n) {
 
 template MerkleTree(n) {  
 
-    signal input leafs[n];
+    signal input leaves[n];
     signal output root;
 
     0 === n & (n - 1); // verify that provided n is power of 2
 
-    var hashesLength = 2 * n - 1; // `n` for inital hashes of leafs, plus `n - 1` for a tree
+    var hashesLength = 2 * n - 1; // `n` for inital hashes of leaves, plus `n - 1` for a tree
     component hashes[hashesLength]; 
     for (var i = 0; i < hashesLength; i++) {
         if (i < n) {
             hashes[i] = HashValues(1);
 
-            hashes[i].values[0] <== leafs[i];
+            hashes[i].values[0] <== leaves[i];
         } else {
             hashes[i] = HashValues(2);
 
@@ -41,4 +41,4 @@ template MerkleTree(n) {
     root <== hashes[hashesLength - 1].out;
 }
 
-component main {public [leafs]} = MerkleTree(8);
+component main {public [leaves]} = MerkleTree(8);
