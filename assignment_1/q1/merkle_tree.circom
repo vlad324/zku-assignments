@@ -22,6 +22,7 @@ template MerkleTree(n) {
 
     0 === n & (n - 1); // verify that provided n is power of 2
 
+    var k = 0;
     var hashesLength = 2 * n - 1; // `n` for inital hashes of leaves, plus `n - 1` for a tree
     component hashes[hashesLength]; 
     for (var i = 0; i < hashesLength; i++) {
@@ -32,9 +33,9 @@ template MerkleTree(n) {
         } else {
             hashes[i] = HashValues(2);
 
-            var k = i - n;
             hashes[i].values[0] <== hashes[k].out;
             hashes[i].values[1] <== hashes[k + 1].out;
+            k += 2;
         }
     }
 
