@@ -1,5 +1,2 @@
-*.ptau
-*.zkey
-proof.json
-public.json
-verification_key.json
+node_modules/*
+.idea/*
