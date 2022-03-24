@@ -27,6 +27,8 @@ template CheckTriangle() {
     signal j;
     j <== (C[0] - A[0]) * (B[1] - A[1]);
 
+    // todo: is it safe to work with negative numbers?
+
     component isz = IsZero();
     isz.in <== i - j;
     isz.out === 0; // is not zero 
