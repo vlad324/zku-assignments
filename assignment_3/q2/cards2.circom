@@ -13,33 +13,7 @@ pragma circom 2.0.0;
 
 include "../../node_modules/circomlib/circuits/comparators.circom";
 include "../../node_modules/circomlib/circuits/mimcsponge.circom";
-
-template Card() {
-
-    signal input card;
-    signal input salt;
-
-    signal output cardCommitment;
-
-    // check card is valid
-    component greaterThanOrEqualTo0 = LessThan(6);
-    greaterThanOrEqualTo0.in[0] <== 0;
-    greaterThanOrEqualTo0.in[1] <== card + 1;
-    greaterThanOrEqualTo0.out === 1;
-
-    component lessThan52 = LessThan(6);
-    lessThan52.in[0] <== card;
-    lessThan52.in[1] <== 52;
-    lessThan52.out === 1;
-
-    // calculate card commitment
-    component mimcCard = MiMCSponge(2, 220, 1);
-    mimcCard.k <== 0;
-    mimcCard.ins[0] <== card;
-    mimcCard.ins[1] <== salt;
-
-    cardCommitment <== mimcCard.outs[0];
-}
+include "./cardcommitment.circom";
 
 template Main() {
 
@@ -78,16 +52,16 @@ template Main() {
     prevSuit === newSuit;
 
     // calculate previous card commitment
-    component card1 = Card();
-    card1.card <== prevCard;
-    card1.salt <== salt;
-    prevCardCommitment <== card1.cardCommitment;
+    component cc1 = CardCommitment();
+    cc1.card <== prevCard;
+    cc1.salt <== salt;
+    prevCardCommitment <== cc1.cardCommitment;
 
     // calculate new card commitment
-    component card2 = Card();
-    card2.card <== newCard;
-    card2.salt <== salt;
-    newCardCommitment <== card2.cardCommitment;
+    component cc2 = CardCommitment();
+    cc2.card <== newCard;
+    cc2.salt <== salt;
+    newCardCommitment <== cc2.cardCommitment;
 }
 
 component main {public [publicSalt]} = Main();
