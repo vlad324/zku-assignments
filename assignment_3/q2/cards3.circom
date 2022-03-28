@@ -5,7 +5,7 @@ pragma circom 2.0.0;
     - MiMCSponge(publicSalt, salt) = saltNullifier
     - card >= 0 && card < 52
     - MiMCSponge(card, salt) = cardCommitment
-    - card / 13 = cardRank
+    - card % 13 = cardRank
 */
 
 include "../../node_modules/circomlib/circuits/mimcsponge.circom";
@@ -36,7 +36,11 @@ template Main() {
     cardCommitment <== cc.cardCommitment;
 
     // reveal card rank, but not suit
-    cardRank <== card \ 13;
+    // suitStart = suit * 13, so rank within suit is card - suitStart
+    signal suit;
+    suit <== card \ 13;
+
+    cardRank <== card - suit * 13;
 }
 
 component main {public [publicSalt]} = Main();
