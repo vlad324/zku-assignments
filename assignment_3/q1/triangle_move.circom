@@ -3,8 +3,8 @@ pragma circom 2.0.0;
 /*
     Prove: I know (A, B, C, e) such that:
     - they make triangle
-    - (A[0] - B[0])^2 + (A[1] - B[1])^2 <= e^2 | can go from A to B with provided engergy
-    - (B[0] - C[0])^2 + (B[1] - C[1])^2 <= e^2 | can go from B to C with provided engergy
+    - (A[0] - B[0])^2 + (A[1] - B[1])^2 <= e^2 | can go from A to B with provided energy
+    - (B[0] - C[0])^2 + (B[1] - C[1])^2 <= e^2 | can go from B to C with provided energy
     - MiMCSponge(A[0],A[1]) = pub1
     - MiMCSponge(B[0],B[1]) = pub2
     - MiMCSponge(C[0],C[1]) = pub3
@@ -26,8 +26,6 @@ template CheckTriangle() {
     i <== (B[0] - A[0]) * (C[1] - A[1]);
     signal j;
     j <== (C[0] - A[0]) * (B[1] - A[1]);
-
-    // todo: is it safe to work with negative numbers?
 
     component isz = IsZero();
     isz.in <== i - j;
@@ -51,7 +49,7 @@ template DistanceLessThenOrEqual() {
     dySq <== dy * dy;
     dSq <== d * d;
 
-    component lessThan = LessThan(32); // why 32?
+    component lessThan = LessThan(32);
     lessThan.in[0] <== dxSq + dySq;
     lessThan.in[1] <== dSq + 1;
     lessThan.out === 1;
@@ -66,8 +64,6 @@ template Main() {
     signal input e;
 
     signal output pub[3];
-
-    // todo: validate bounds for A, B, C
 
     // check triangle
     component checkTriangle = CheckTriangle();
